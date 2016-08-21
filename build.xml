@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="Threads" default="dist" basedir=".">
+    <description>build file</description>
+
+    <property file="build.properties"/>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <path id="classpath" >
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="compile" depends="init"
+            description="compile the source " >
+        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"/>
+    </target>
+    <target name="dist" depends="compile"
+            description="make distr" >
+        <mkdir dir="${dist.dir}/lib"/>
+        <jar jarfile="${dist.dir}/lib/threads-${DSTAMP}.jar" basedir="${build.dir}"/>
+    </target>
+    <target name="clean"
+            description="delete the /build and /dist directory trees" >
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="junit" depends="compile">
+        <junit printsummary="on" haltonfailure="no" >
+            <classpath>
+                <fileset dir="${junit.dir}" includes="junit-4.10.jar"/>
+                <pathelement  location="${build.dir}"/>
+                <path refid="classpath" />
+            </classpath>
+            <formatter type="plain" />
+            <batchtest todir="${test.report.dir}">
+                <fileset dir="${unittest.dir}" />
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
